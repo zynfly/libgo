@@ -200,6 +200,23 @@ public:
         return (T*)ptr;
     }
 
+    ALWAYS_INLINE std::shared_ptr<T> pop_sharedptr()
+    {
+        if (head_ == tail_) return std::shared_ptr<T>();
+        LockGuard lock(lck);
+        if (head_ == tail_) return std::shared_ptr<T>();
+        TSQueueHook* ptr = head_->next;
+        if (ptr == tail_) tail_ = head_;
+        head_->next = ptr->next;
+        if (ptr->next) ptr->next->prev = head_;
+        ptr->prev = ptr->next = nullptr;
+        ptr->check_ = nullptr;
+        -- count_;
+        auto sp = ((T*)ptr)->shared_from_this();
+        DecrementRef((T*)ptr);
+        return sp;
+    }
+
     ALWAYS_INLINE void push(SList<T> && elements)
     {
         if (elements.empty()) return ;  // empty的SList不能check, 因为stealed的时候已经清除check_.

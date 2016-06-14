@@ -36,7 +36,7 @@ struct IoSentry
         triggered,
     };
 
-    volatile std::atomic<long> io_state_;
+    std::atomic<long> io_state_;
     std::vector<pollfd> watch_fds_; //会被多线程并行访问, add_into_reactor后长度不能变
     CoTimerPtr timer_;
     TaskPtr task_ptr_;
