@@ -7,7 +7,7 @@
 using namespace std;
 
 std::atomic_int g_value{0};
-static const int co_count = 100;
+static const int co_count = 1000;
 static const int switch_per_co = 10;
 static int thread_count = 1;
 
@@ -15,8 +15,7 @@ void f1()
 {
     for (int i = 0; i < switch_per_co; ++i) {
         //printf("f1 %d\n", g_value++);
-        g_value++;
-        usleep(1000);
+        sleep(1);
         co_yield;
     }
 }
@@ -44,7 +43,8 @@ int main(int argc, char** argv)
                     while (!g_Scheduler.IsEmpty()) {
                         c += g_Scheduler.Run();
                     }
-                    printf("[%lu] do count: %u\n", pthread_self(), c);
+                    //g_Scheduler.RunUntilNoTask();
+                    printf("[%llu] do count: %u\n", pthread_self(), c);
                 });
         }
         tg.join_all();

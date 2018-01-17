@@ -1,6 +1,6 @@
 #include <libgo/config.h>
 #include <libgo/context.h>
-#include <string.h>
+#include <cstring>
 
 namespace co
 {

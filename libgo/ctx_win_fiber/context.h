@@ -1,17 +1,17 @@
 #include <Windows.h>
 #include <algorithm>
-#include <stdio.h>
+#include <cstdio>
 
 namespace co
 {
     
     struct ContextScopedGuard
     {
-        ContextScopedGuard::ContextScopedGuard()
+        ContextScopedGuard()
         {
             GetTlsContext() = ConvertThreadToFiber(nullptr);
         }
-        ContextScopedGuard::~ContextScopedGuard()
+        ~ContextScopedGuard()
         {
             ConvertFiberToThread();
             GetTlsContext() = nullptr;
